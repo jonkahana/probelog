@@ -90,7 +90,7 @@
                     <span class="icon">
                       <i class="fab fa-github"></i>
                     </span>
-                    <span>Code</span>
+                    <span>Code (Coming Soon!)</span>
                   </a>
                 </span>
 
@@ -157,15 +157,15 @@
             <!-- Text Section (Left) -->
             <div class="column is-6">
                 <div class="content">
+                    <h2 class="title is-3">Task & Motivation</h2>
                     <p>
-                        The existing solution for model search is text-based search in the user-uploaded documentation.
-                        To understand the effectiveness of this solution, we explore the level of documentation of all 1.2M models in
-                        <a href="https://huggingface.co/">Hugging Face</a>, the largest model repository.
-                        As shown below, over 30% of all models have no model card at all,
-                        and another 28.9% have model cards with no information.
-                        The remaining 40% of model cards may include some information,
-                        however, we cannot determine exactly how many of them include relevant information about the training data.
-                        We conclude that searching models by weights alone is an important task.
+                        Our objective is to accurately and efficiently search for relevant models in a large repository that can recognize a target concept, e.g., ``Dog''.
+                        While existing solutions search approaches rely on the text of the user-uploaded documentation,
+                        our analysis shows that real-world models are often poorly documented.
+                        We observed all 1.2M models cards in
+                        <a href="https://huggingface.co/">Hugging Face</a> and found that 60% of all models have no information in their model cards.
+                        Thus, we aim to search for new models based on their weights alone,
+                        without assuming access to the training data or metadata.
                     </p>
                 </div>
             </div>
@@ -181,52 +181,51 @@
 </section>
 
 
-<section class="section hero is-small">
+<!--<section class="section hero is-small">-->
+<!--    <div class="container is-max-desktop">-->
+<!--        <div class="columns is-centered">-->
+<!--            <div class="column is-full">-->
+<!--                <div class="content">-->
+<!--                    <h2 class="title is-3">Motivation</h2>-->
+<!--                    <div class="level-set has-text-justified">-->
+<!--                        <p>-->
+<!--                            Our objective is to accurately and efficiently find relevant models in a large repository that can recognize a target concept, e.g., ``Dog''.-->
+<!--                            Instead of using a single representation for the entire model, we represent each model output (logit) separately.-->
+<!--                            However, to validate that logit responses to probes provide an effective description of the semantic function,-->
+<!--                            we present a simple experiment: We take 10 different ViT foundation models,-->
+<!--                            each trained via a different procedure and fine-tune them on the CIFAR10 classification task.-->
+<!--                            We then randomly sample 1,000 ImageNet images as probes and run them through the model,-->
+<!--                            and define the responses of all probes for a specific logit as its descriptor.-->
+<!--                            The correlations between all pairs of logits are present in the correlation matrix below.-->
+<!--                            It is clear that logit responses to probes are mostly correlated to those of logits with a matching semantic concept instead of, for example, logits from the same model.-->
+<!--                        </p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="hero-body">-->
+<!--            <img src="static/images/ProbeLog_cifar_visualization.png" alt="A figure showing that HuggingFace Models are poorly documented"/>-->
+<!--        </div>-->
+
+<!--    </div>-->
+<!--</section>-->
+
+
+<section class="section hero is-small is-light">
     <div class="container is-max-desktop">
         <div class="columns is-centered">
             <div class="column is-full">
                 <div class="content">
-                    <div class="level-set has-text-justified">
-                        <p>
-                            Our objective is to accurately and efficiently find relevant models in a large repository that can recognize a target concept, e.g., ``Dog''.
-                            Instead of using a single representation for the entire model, we represent each model output (logit) separately.
-                            However, to validate that logit responses to probes provide an effective description of the semantic function,
-                            we present a simple experiment: We take 10 different ViT foundation models,
-                            each trained via a different procedure and fine-tune them on the CIFAR10 classification task.
-                            We then randomly sample 1,000 ImageNet images as probes and run them through the model,
-                            and define the responses of all probes for a specific logit as its descriptor.
-                            The correlations between all pairs of logits are present in the correlation matrix below.
-                            It is clear that logit responses to probes are mostly correlated to those of logits with a matching semantic concept instead of, for example, logits from the same model.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="hero teaser">
-    <div class="container is-max-desktop">
-        <div class="hero-body">
-            <img src="static/images/ProbeLog_cifar_visualization.png" alt="A figure showing that HuggingFace Models are poorly documented"/>
-        </div>
-    </div>
-</section>
-
-
-<section class="section hero is-small">
-    <div class="container is-max-desktop">
-        <div class="columns is-centered">
-            <div class="column is-full">
-                <div class="content">
+                    <h2 class="title is-3">Logit-level Descriptors</h2>
                     <div class="level-set has-text-justified">
                         <p>
                         <p>
-                            We therefore propose <strong>ProbeLog</strong>: a probing-based descriptor for logits of classification models.
-                            To extract ProbeLog descriptors for a logit, we pass a set of <em>n</em> ordered, fixed input samples (probes) through the model.
+                            We introduce <strong>ProbeLog</strong>, a probing based logit-level descriptor especially designed for model search.
+                            I.e., ProbeLog represents each model output (logit) separately, instead of using a single representation for the entire model.
+                            To extract ProbeLog descriptors for a certain logit, we pass a set of <em>n</em> ordered, fixed input samples (probes) through the model.
                             Intuitively, these are a set of standardized questions that we ask the model.
                             In practice, we compose the list of probes by randomly sampling images (without replacement) from an out-of-distribution image dataset.
-                            For generality, we choose COCO, which is highly diverse.
                         </p>
 
                         <p>
@@ -238,49 +237,21 @@
                             ProbeLog(f,i) = [f(x_1)[i], f(x_2)[i], \cdots, f(x_n)[i]]
                             \]
                         </p>
+                        <p>
+                            Comparing between different ProbeLog descriptors can find models that are similar in their ability to recognize a specific concept.
+                            Next, we show how to use these descriptors to search for models by text.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
 
-
-<section class="hero teaser">
-    <div class="container is-max-desktop">
         <div class="hero-body">
             <img src="static/images/ProbeLog.png" alt="A figure showing our ProbeLog logit descriptors"/>
         </div>
+
     </div>
 </section>
-
-
-<!--<section class="hero is-small">-->
-<!--    <div class="hero-body">-->
-<!--        <div class="container">-->
-<!--            <div id="results-carousel" class="carousel results-carousel">-->
-<!--                <div class="item">-->
-<!--                    &lt;!&ndash; Your image here &ndash;&gt;-->
-<!--                    <img src="static/images/ProbeLog.png" alt="A table comparing probing to previous approaches"/>-->
-<!--                    <h2 class="subtitle has-text-centered">-->
-<!--                        <em><b>ProbeLog Descriptors.</b></em> To extract a ProbeLog desciptor for a logit of a model, we pass a set of ordered, fixed input samples (probes) through the model and define the descriptor as the normalized responses of all probes at this logit.-->
-<!--                    </h2>-->
-<!--                </div>-->
-<!--                <div class="item">-->
-<!--                    &lt;!&ndash; Your image here &ndash;&gt;-->
-<!--                    <img src="static/images/zero_shot_ProbeLog.png" alt="Comparing synthetic data to learnt probes"/>-->
-<!--                    <h2 class="subtitle has-text-centered">-->
-<!--                        <em><b>Text-Aligned ProbeLog Descriptors.</b></em> We wish to search for models by a text prompt to recognize a target concept, such as "Dog".-->
-<!--                        We therefore define a ProbeLog-like descriptor for any given text prompt:-->
-<!--                        First, we compute the similarities between all probes and the prompt according to CLIP.-->
-<!--                        Then, we find that by normalizing this similarities vector we can obtain a ProbeLog-like descriptor for the prompt.-->
-<!--                    </h2>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</section>-->
-
 
 
 <section class="section hero is-small">
@@ -288,9 +259,10 @@
         <div class="columns is-centered">
             <div class="column is-full">
                 <div class="content">
+                    <h2 class="title is-3">Zero-Shot Model Search</h2>
                     <div class="level-set has-text-justified">
                         <p>
-                            Yet, ProbeLog alone only provides a way to search by logit, which assumes the user already has such model.
+                            Alone, ProbeLog descriptors only provide a way to search by logit, which assumes the user already has such model.
                             To enable finding new models, we extend our method to a search by text setting,
                             where the user can search for concepts by simply naming them in text, making our search method zero-shot.
                             To do so, we utilize a multimodal text alignment model (e.g., CLIP) to create for generating ProbeLog-like descriptors from text alone.
@@ -301,45 +273,38 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
 
-
-
-<section class="hero teaser">
-    <div class="container is-max-desktop">
         <div class="hero-body">
             <img src="static/images/zero_shot_ProbeLog.png" alt="A figure showing our zero-shot ProbeLog logit descriptors"/>
         </div>
+
     </div>
 </section>
 
 
-
-<section class="section hero is-small">
+<section class="section hero is-small is-light">
     <div class="container is-max-desktop">
         <div class="columns is-centered">
             <div class="column is-full">
                 <div class="content">
+                    <h2 class="title is-3">Collaborative Probing</h2>
                     <div class="level-set has-text-justified">
                         <p>
                             Lastly, as creating the ProbeLog representations for an entire model repository can be very costly,
                             we present Collaborative Probing, a method to reduce the number of probes passed through each model by 3x.
                             Instead of probing all models with all probes, we only use a random selection of the probes for each model, and treat the remaining probes as missing data.
-                            We then complete the missing information with matrix-factorization based collaborative filtering. We later show this results in greatly improved performance for low probe numbers.
+                            We then complete the missing information with matrix-factorization based collaborative filtering. We later show this results in greatly improved performance for low probe
+                            numbers.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
 
-<section class="hero teaser">
-    <div class="container is-max-desktop">
         <div class="hero-body">
             <img src="static/images/Collaborative_Probing_Diagram.png" alt="A figure showing illustrating our Collaborative Probing setting"/>
         </div>
+
     </div>
 </section>
 
@@ -349,51 +314,21 @@
         <div class="columns is-centered">
             <div class="column is-full">
                 <div class="content">
+                    <h2 class="title is-3">Results</h2>
                     <div class="level-set has-text-justified">
                         <p>
                             We showcase ProbeLog's effectiveness on two real-world datasets that we curate:
                             one based on models that we train for fine-grained logit search evaluation, and the other containing models that we download from Hugging Face.
                             Our method is scalable and can handle large models with high effectiveness and efficiency.
-                            It achieves high retrieval accuracy, reaching over 40\% top-1 accuracy when predicting whether a model can recognize an ImageNet target concept from text (where a random method only scores 0.1\%).
+                            It achieves high retrieval accuracy, reaching over 40% top-1 accuracy when predicting whether a model can recognize an ImageNet target concept from text (where a random
+                            method only scores 0.1%).
                             Furthermore, we establish the strong performance of our Collaborative Probing approach, showing it can substantially reduce the number of probes passed through each model.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
 
-
-<!--<section class="hero is-small">-->
-<!--    <div class="hero-body">-->
-<!--        <div class="container">-->
-<!--            <div id="results-carousel" class="carousel results-carousel">-->
-<!--                <div class="item">-->
-<!--                    <div class="image-container">-->
-<!--                        <img src="static/images/results.png" alt="A table comparing ProbeLog to previous approaches"/>-->
-<!--                    </div>-->
-<!--                    <h2 class="subtitle has-text-centered">-->
-<!--                        <em><b>Search Results.</b></em> We test ProbeLog on real-world and fine-grained model Hubs.-->
-<!--                        ProbeLog shows impressive top-1 search accuracy, both in search-by-logit and search-by-text tasks.-->
-<!--                    </h2>-->
-<!--                </div>-->
-<!--                <div class="item">-->
-<!--                    <div class="image-container">-->
-<!--                        <img src="static/images/Collaborative_Probing_results.png" alt="Collaborative Probing results figure"/>-->
-<!--                    </div>-->
-<!--                    <h2 class="subtitle has-text-centered">-->
-<!--                        <em><b>Collaborative Probing Enhancement.</b></em> Collaborative Probing can reduce the number of needed probes by 3x.-->
-<!--                    </h2>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</section>-->
-
-
-<section class="hero is-small">
-    <div class="hero-body">
         <div class="container">
             <div id="results-carousel" class="carousel results-carousel">
                 <div class="item" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%;">
@@ -413,14 +348,18 @@
                 </div>
             </div>
         </div>
+
     </div>
 </section>
+
 
 <!--BibTex citation -->
 <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
-        <h2 class="title">BibTeX</h2>
-        <pre><code>COMING SOON</code></pre>
+        <pre>
+            <h2 class="title">BibTeX</h2>
+            <code>COMING SOON</code>
+        </pre>
     </div>
 </section>
 <!--End BibTex citation -->
